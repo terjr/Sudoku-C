@@ -1,0 +1,5 @@
+I took my Sudoku solver written in Ruby[1] and tried to optimize the shit out of it in C. Just wanted an experiemtnt to learn some C.
+The results when I ran the "near worst case"[2] was over an hour with the Ruby code and 16.5 seconds with this C code. (But note that the Ruby code is not optimized at all and is more pleasant to read, but still).
+
+[1] https://github.com/AntonFagerberg/Sudoku-Solver-Ruby/
+[2] http://en.wikipedia.org/wiki/Sudoku_algorithms#Brute-force_algorithm
