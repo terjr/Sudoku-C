@@ -10,7 +10,7 @@
 /* "Near worst case" Sudoku
  * http://en.wikipedia.org/wiki/Sudoku_algorithms#Brute-force_algorithm
  */
-uint8_t puzzle[81] = {
+/*uint8_t puzzle[81] = {
 	0, 0, 0,	0, 0, 0,	0, 0, 0,
 	0, 0, 0,	0, 0, 3,	0, 8, 5,
 	0, 0, 1,	0, 2, 0,	0, 0, 0,
@@ -22,9 +22,9 @@ uint8_t puzzle[81] = {
 	5, 0, 0,	0, 0, 0,	0, 7, 3,
 	0, 0, 2,	0, 1, 0,	0, 0, 0,
 	0, 0, 0,	0, 4, 0,	0, 0, 9
-};
+};*/
 
-/*uint8_t puzzle[81] = {
+uint8_t puzzle[81] = {
 	0, 0, 0,	0, 0, 0,	0, 0, 0,
 	0, 0, 0,	0, 0, 0,	0, 0, 0,
 	0, 0, 0,	0, 0, 0,	0, 0, 0,
@@ -36,7 +36,7 @@ uint8_t puzzle[81] = {
 	0, 0, 0,	0, 0, 0,	0, 0, 0,
 	0, 0, 0,	0, 0, 0,	0, 0, 0,
 	0, 0, 0,	0, 0, 0,	0, 0, 0
-};*/
+};
 
 uint8_t solve(uint8_t i) {
 	// Solved it!
