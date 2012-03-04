@@ -10,71 +10,114 @@
 /* "Near worst case" Sudoku
  * http://en.wikipedia.org/wiki/Sudoku_algorithms#Brute-force_algorithm
  */
-/*uint16_t puzzle[81] = {
-	0,0,0,		0,0,0,			0,0,0,
-	0,0,0,		0,0,1 << 3,		0,1 << 8,1 << 5,
-	0,0,1 << 1,	0,1 << 2,0,		0,0,0,
-
-	0,0,0,		1 << 5,0,1 << 7,	0,0,0,
-	0,0,1 << 4,	0,0,0,			1 << 1,	0,0,
-	0,1 << 9,0,	0,0,0,			0,0,0,
-
-	1 << 5,	0,0,	0,0,0,			0,1 << 7,1 << 3,
-	0,0,1 << 2,	0,1 << 1,0,		0,0,0,
-	0,0,0,		0,1 << 4,0,		0,0,1 << 9
-};*/
-
 uint16_t puzzle[81] = {
-	0, 0, 0,	0, 0, 0,	0, 0, 0,
-	0, 0, 0,	0, 0, 0,	0, 0, 0,
-	0, 0, 0,	0, 0, 0,	0, 0, 0,
+	0,0,0,		0,0,0,		0,0,0,
+	0,0,0,		0,0,4,		0,128,16,
+	0,0,1,		0,2,0,		0,0,0,
 
-	0, 0, 0,	0, 0, 0,	0, 0, 0,
-	0, 0, 0,	0, 0, 0,	0, 0, 0,
-	0, 0, 0,	0, 0, 0,	0, 0, 0,
+	0,0,0,		16,0,64,	0,0,0,
+	0,0,8,		0,0,0,		1,0,0,
+	0,256,0,	0,0,0,		0,0,0,
 
-	0, 0, 0,	0, 0, 0,	0, 0, 0,
-	0, 0, 0,	0, 0, 0,	0, 0, 0,
-	0, 0, 0,	0, 0, 0,	0, 0, 0
+	16,	0,0,	0,0,0,		0,64,4,
+	0,0,2,		0,1,0,		0,0,0,
+	0,0,0,		0,8,0,		0,0,256
 };
 
 uint8_t solve(uint8_t i) {
 	// Solved it!
-	if (i == 81)
+	if (!(i ^ 81))
 		return 1;
+
 
 	// Skip the positions which are defined from the start.
 	if (puzzle[i]) 
 		return solve(i + 1);
 
-	uint16_t valid_numbers = 0xFFFF;
-	uint8_t n, m;
+	uint8_t align = i % 9;
+	uint16_t valid_numbers = puzzle[ align ];
+	valid_numbers = valid_numbers | puzzle[ align + 9 ];
+	valid_numbers = valid_numbers | puzzle[ align + 18 ];
+	valid_numbers = valid_numbers | puzzle[ align + 27 ];
+	valid_numbers = valid_numbers | puzzle[ align + 36 ];
+	valid_numbers = valid_numbers | puzzle[ align + 45 ];
+	valid_numbers = valid_numbers | puzzle[ align + 54 ];
+	valid_numbers = valid_numbers | puzzle[ align + 63 ];
+	valid_numbers = valid_numbers | puzzle[ align + 72 ];
 
-	for (n = 0; n < 9; n += 1) {
-		// Check rows
-		valid_numbers = valid_numbers & ~puzzle[ i % 9 + n * 9 ];
-
-		// Check columns
-		valid_numbers = valid_numbers & ~puzzle[ i / 9 * 9 + n ];
-	}
+	align = i / 9 * 9;
+	valid_numbers = valid_numbers | puzzle[ align ];
+	valid_numbers = valid_numbers | puzzle[ align + 1 ];
+	valid_numbers = valid_numbers | puzzle[ align + 2 ];
+	valid_numbers = valid_numbers | puzzle[ align + 3 ];
+	valid_numbers = valid_numbers | puzzle[ align + 4 ];
+	valid_numbers = valid_numbers | puzzle[ align + 5 ];
+	valid_numbers = valid_numbers | puzzle[ align + 6 ];
+	valid_numbers = valid_numbers | puzzle[ align + 7 ];
+	valid_numbers = valid_numbers | puzzle[ align + 8 ];
 	
 	// Check "squares"
-	for (n = 0; n < 3; n += 1)
-		for (m = 0; m < 3; m += 1)
-			valid_numbers = valid_numbers & ~puzzle[ 27 * (i / 9 / 3) + 3 * (i / 3 % 3) + n + (m * 9) ];
+	align = 27 * (i / 9 / 3) + 3 * (i / 3 % 3);
+	valid_numbers = valid_numbers | puzzle[ align ];
+	valid_numbers = valid_numbers | puzzle[ align + 9 ];
+	valid_numbers = valid_numbers | puzzle[ align + 18 ];
 
-	uint16_t bit;
-	for (m = 1; m < 10; m += 1) {
-		bit = 1 << m;
-		if (valid_numbers & bit) {
-			puzzle[i] = bit;
-			if (solve(i + 1))
-				return 1;
-			puzzle[i] = 0;
-		}
+	valid_numbers = valid_numbers | puzzle[ align + 1 ];
+	valid_numbers = valid_numbers | puzzle[ align + 10 ];
+	valid_numbers = valid_numbers | puzzle[ align + 19 ];
+	
+	valid_numbers = valid_numbers | puzzle[ align + 2 ];
+	valid_numbers = valid_numbers | puzzle[ align + 11 ];
+	valid_numbers = valid_numbers | puzzle[ align + 20 ];
+
+	uint8_t next = i + 1;
+	if (!(valid_numbers & 1)) {
+		puzzle[i] = 1;
+		if (solve(next))
+			return 1;
+	}
+	if (!(valid_numbers & 2)) {
+		puzzle[i] = 2;
+		if (solve(next))
+			return 1;
+	}
+	if (!(valid_numbers & 4)) {
+		puzzle[i] = 4;
+		if (solve(next))
+			return 1;
+	}
+	if (!(valid_numbers & 8)) {
+		puzzle[i] = 8;
+		if (solve(next))
+			return 1;
+	}
+	if (!(valid_numbers & 16)) {
+		puzzle[i] = 16;
+		if (solve(next))
+			return 1;
+	}
+	if (!(valid_numbers & 32)) {
+		puzzle[i] = 32;
+		if (solve(next))
+			return 1;
+	}
+	if (!(valid_numbers & 64)) {
+		puzzle[i] = 64;
+		if (solve(next))
+			return 1;
+	}
+	if (!(valid_numbers & 128)) {
+		puzzle[i] = 128;
+		if (solve(next))
+			return 1;
+	}
+	if (!(valid_numbers & 256)) {
+		puzzle[i] = 256;
+		if (solve(next))
+			return 1;
 	}
 
-	return 0;
+	return puzzle[i] = 0;
 }
 
 void print_puzzle() {
@@ -86,7 +129,7 @@ void print_puzzle() {
 			printf("\n");
 		if (!(i % 3))
 			printf("| ");
-		int count = -1;
+		int count = 0;
 		while (puzzle[i]) {
 			puzzle[i] = puzzle[i] >> 1;
 			count++;
@@ -99,10 +142,9 @@ void print_puzzle() {
 }
 
 int main() {
-	solve(0);
 	if (solve(0))
 		print_puzzle();
 	else
-		printf("Did not solve puzzle. Check input...");
+	 	printf("Did not solve puzzle. Check input...");
 	return 0;
 }
