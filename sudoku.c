@@ -1,8 +1,8 @@
 /*
  * Sudoku Solver (brute-force).
- * This contains some "weird math" and bitwise operations
  * with the purpose of beeing fast as hell. It's pretty fast.
  * 2012 Anton Fagerberg [anton at antonfagerberg dot com]
+ * wwww.antonfagerberg.com
  */
 #include <stdio.h>
 #include <stdint.h>
@@ -19,7 +19,7 @@ uint16_t puzzle[81] = {
 	0,0,8,		0,0,0,		1,0,0,
 	0,256,0,	0,0,0,		0,0,0,
 
-	16,	0,0,	0,0,0,		0,64,4,
+	16,0,0,		0,0,0,		0,64,4,
 	0,0,2,		0,1,0,		0,0,0,
 	0,0,0,		0,8,0,		0,0,256
 };
@@ -28,7 +28,6 @@ uint8_t solve(uint8_t i) {
 	// Solved it!
 	if (!(i ^ 81))
 		return 1;
-
 
 	// Skip the positions which are defined from the start.
 	if (puzzle[i]) 
